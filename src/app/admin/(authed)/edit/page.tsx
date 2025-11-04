@@ -23,6 +23,10 @@ export default function EditPage() {
   const [success, setSuccess] = useState("");
   const [editedData, setEditedData] = useState<any[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
+  const [hasChanges, setHasChanges] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [originalData, setOriginalData] = useState<any[]>([]);
+  const [originalHeaders, setOriginalHeaders] = useState<string[]>([]);
 
   useEffect(() => {
     // 認証チェック
@@ -61,6 +65,12 @@ export default function EditPage() {
       // ヘッダーを状態として管理
       const headerList = data.header.split(",").map((h: string) => h.trim());
       setHeaders(headerList);
+      // 元のデータを保存（変更検出用）
+      setOriginalData(JSON.parse(JSON.stringify(data.data)));
+      setOriginalHeaders([...headerList]);
+      // 変更フラグをリセット
+      setHasChanges(false);
+      setIsSaved(false);
     } catch (err) {
       setError("CSVファイルの読み込みに失敗しました");
       console.error("Load CSV error:", err);
@@ -98,8 +108,16 @@ export default function EditPage() {
       }
 
       setSuccess("CSVファイルを保存しました");
-      // データを再読み込み
+      // 現在のデータを元のデータとして保存
+      setOriginalData(JSON.parse(JSON.stringify(editedData)));
+      setOriginalHeaders([...headers]);
+      // 変更フラグをリセットし、保存済みフラグを設定
+      setHasChanges(false);
+      setIsSaved(true);
+      // データを再読み込み（保存済みフラグを保持）
       await loadCSV();
+      // 再読み込み後に保存済みフラグを再度設定
+      setIsSaved(true);
     } catch (err) {
       setError("CSVファイルの保存に失敗しました");
       console.error("Save CSV error:", err);
@@ -121,14 +139,23 @@ export default function EditPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "ビルドに失敗しました");
+        let errorMessage = data.error || "ビルドに失敗しました";
         if (data.details) {
-          setError(`${data.error}: ${data.details}`);
+          errorMessage += `\n\n${data.details}`;
         }
+        if (data.stderr) {
+          // stderrの最後の部分を表示（エラーメッセージが含まれる）
+          const stderrLines = data.stderr.split("\n");
+          const lastLines = stderrLines.slice(-20).join("\n");
+          errorMessage += `\n\nエラー詳細:\n${lastLines}`;
+        }
+        setError(errorMessage);
         return;
       }
 
       setSuccess("ビルドが完了しました");
+      // ビルド実行後は保存済みフラグをリセット
+      setIsSaved(false);
     } catch (err) {
       setError("ビルドに失敗しました");
       console.error("Build error:", err);
@@ -142,6 +169,15 @@ export default function EditPage() {
     router.push("/admin/login");
   };
 
+  // 変更を検出する関数
+  const checkChanges = (currentData: any[], currentHeaders: string[]) => {
+    const dataChanged =
+      JSON.stringify(currentData) !== JSON.stringify(originalData);
+    const headersChanged =
+      JSON.stringify(currentHeaders) !== JSON.stringify(originalHeaders);
+    setHasChanges(dataChanged || headersChanged);
+  };
+
   const handleAddRow = (insertAfterIndex?: number) => {
     if (!csvData) return;
 
@@ -150,25 +186,30 @@ export default function EditPage() {
       newRow[header] = "";
     });
 
+    let newData: any[];
     if (insertAfterIndex !== undefined) {
       // 指定された行の後に挿入
-      const newData = [...editedData];
+      newData = [...editedData];
       newData.splice(insertAfterIndex + 1, 0, newRow);
-      setEditedData(newData);
     } else {
       // 先頭に追加
-      setEditedData([newRow, ...editedData]);
+      newData = [newRow, ...editedData];
     }
+    setEditedData(newData);
+    checkChanges(newData, headers);
   };
 
   const handleDeleteRow = (index: number) => {
-    setEditedData(editedData.filter((_, i) => i !== index));
+    const newData = editedData.filter((_, i) => i !== index);
+    setEditedData(newData);
+    checkChanges(newData, headers);
   };
 
   const handleCellChange = (rowIndex: number, key: string, value: string) => {
     const newData = [...editedData];
     newData[rowIndex] = { ...newData[rowIndex], [key]: value };
     setEditedData(newData);
+    checkChanges(newData, headers);
   };
 
   if (loading) {
@@ -222,14 +263,14 @@ export default function EditPage() {
           <button
             onClick={handleSave}
             className={`${styles.button} ${styles.saveButton}`}
-            disabled={saving}
+            disabled={!hasChanges || saving}
           >
             {saving ? "保存中..." : "保存"}
           </button>
           <button
             onClick={handleBuild}
             className={`${styles.button} ${styles.buildButton}`}
-            disabled={building}
+            disabled={hasChanges || !isSaved || building}
           >
             {building ? "ビルド中..." : "ビルド実行"}
           </button>
