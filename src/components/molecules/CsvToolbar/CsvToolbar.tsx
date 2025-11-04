@@ -56,8 +56,9 @@ export function CsvToolbar({
         <Button variant="success" onClick={onSave} disabled={isSaveDisabled}>
           {saving ? "保存中..." : "保存"}
         </Button>
+        {/* COMMENT: 正式にはビルドだが，秘書さんが理解しやすいように公開と記述 */}
         <Button variant="warning" onClick={onBuild} disabled={isBuildDisabled}>
-          {building ? "ビルド中..." : "ビルド実行"}
+          {building ? "公開中..." : "公開"}
         </Button>
       </div>
     </div>
