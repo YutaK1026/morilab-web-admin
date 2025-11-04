@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import type { AdminStatus } from "./types";
+import type { AdminStatus } from "../types";
 import { useOnAuthenticatedRef } from "./useOnAuthenticatedRef";
 import { useAdminStatusFetcher } from "./useAdminStatusFetcher";
 
@@ -70,4 +70,4 @@ export function useAdminLogin(options: UseAdminLoginOptions = {}): UseAdminLogin
   };
 }
 
-export type { AdminStatus } from "./types";
+export type { AdminStatus } from "../types";

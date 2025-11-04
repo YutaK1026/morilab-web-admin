@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import type { CsvFile, CsvRow } from "./types";
+import type { CsvFile, CsvRow } from "../types";
 import { useOnUnauthenticatedRef } from "./useOnUnauthenticatedRef";
 import { useCsvLoader } from "./useCsvLoader";
 

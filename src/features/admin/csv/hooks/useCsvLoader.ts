@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Dispatch, MutableRefObject, SetStateAction } from "react";
-import type { CsvFile, CsvResponse, CsvRow } from "./types";
+import type { CsvFile, CsvResponse, CsvRow } from "../types";
 
 type UnauthenticatedHandler = (() => void) | undefined;
 

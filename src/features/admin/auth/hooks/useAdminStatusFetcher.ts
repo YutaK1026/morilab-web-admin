@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { MutableRefObject } from "react";
-import type { AdminStatus } from "./types";
+import type { AdminStatus } from "../types";
 
 type AuthenticatedHandler = (() => void) | undefined;
 
@@ -48,4 +48,3 @@ export function useAdminStatusFetcher(
     fetchStatus,
   };
 }
-

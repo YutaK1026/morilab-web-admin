@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/atoms";
 import { LoginForm, StatusPanel } from "@/components/molecules";
-import { useAdminLogin } from "@/lib/hooks/hooks";
+import { useAdminLogin } from "@/features/admin/auth";
 import { useRouter } from "next/navigation";
 import styles from "./LoginPanel.module.scss";
 
@@ -42,4 +42,3 @@ export function LoginPanel() {
     </div>
   );
 }
-

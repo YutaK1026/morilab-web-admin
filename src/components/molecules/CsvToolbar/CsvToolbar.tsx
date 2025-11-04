@@ -1,5 +1,5 @@
 import { Button, Select } from "@/components/atoms";
-import type { CsvFile } from "@/lib/hooks/hooks";
+import type { CsvFile } from "@/features/admin/csv";
 import styles from "./CsvToolbar.module.scss";
 
 const FILE_OPTIONS: Array<{ value: CsvFile; label: string }> = [

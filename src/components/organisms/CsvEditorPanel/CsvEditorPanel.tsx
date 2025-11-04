@@ -2,7 +2,7 @@
 
 import { Button, Message } from "@/components/atoms";
 import { CsvTable, CsvToolbar } from "@/components/molecules";
-import { useCsvEditor } from "@/lib/hooks/hooks";
+import { useCsvEditor } from "@/features/admin/csv";
 import { useRouter } from "next/navigation";
 import styles from "./CsvEditorPanel.module.scss";
 
@@ -80,4 +80,3 @@ export function CsvEditorPanel() {
     </div>
   );
 }
-

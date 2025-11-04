@@ -1,11 +1,6 @@
 import { Message, StatusBadge } from "@/components/atoms";
+import type { AdminStatus } from "@/features/admin/auth";
 import styles from "./StatusPanel.module.scss";
-
-export type AdminStatus = {
-  ip: string;
-  ipAllowed: boolean;
-  authenticated: boolean;
-};
 
 type StatusPanelProps = {
   status: AdminStatus | null;
