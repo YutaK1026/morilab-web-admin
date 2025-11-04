@@ -189,6 +189,27 @@
   border-color: #667eea;
 }
 
+.rowActions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.insertButton {
+  padding: 4px 8px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.insertButton:hover {
+  background: #16a34a;
+}
+
 .deleteButton {
   padding: 4px 8px;
   background: #ef4444;
@@ -205,12 +226,85 @@
 }
 
 .footer {
-  display: flex;
-  justify-content: flex-end;
   background: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.footerActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.addColumnForm {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.columnInput {
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.columnInput:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.addColumnButton {
+  padding: 8px 16px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.addColumnButton:hover {
+  background: #16a34a;
+}
+
+.cancelButton {
+  padding: 8px 16px;
+  background: #9ca3af;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cancelButton:hover {
+  background: #6b7280;
+}
+
+.addColumnToggleButton {
+  padding: 10px 20px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.addColumnToggleButton:hover {
+  background: #16a34a;
 }
 
 .addButton {

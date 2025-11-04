@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from './page.module.css';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import styles from "./page.module.css";
 
-type CSVFile = 'members' | 'news' | 'publications';
+type CSVFile = "members" | "news" | "publications";
 
 interface CSVData {
   description: string;
@@ -14,26 +14,27 @@ interface CSVData {
 
 export default function EditPage() {
   const router = useRouter();
-  const [selectedFile, setSelectedFile] = useState<CSVFile>('members');
+  const [selectedFile, setSelectedFile] = useState<CSVFile>("members");
   const [csvData, setCsvData] = useState<CSVData | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [building, setBuilding] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [editedData, setEditedData] = useState<any[]>([]);
+  const [headers, setHeaders] = useState<string[]>([]);
 
   useEffect(() => {
     // 認証チェック
-    fetch('/api/admin/status')
+    fetch("/api/admin/status")
       .then((res) => res.json())
       .then((data) => {
         if (!data.authenticated) {
-          router.push('/admin/login');
+          router.push("/admin/login");
         }
       })
       .catch(() => {
-        router.push('/admin/login');
+        router.push("/admin/login");
       });
   }, [router]);
 
@@ -43,23 +44,26 @@ export default function EditPage() {
 
   const loadCSV = async () => {
     setLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
       const response = await fetch(`/api/admin/csv?file=${selectedFile}`);
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'CSVファイルの読み込みに失敗しました');
+        setError(data.error || "CSVファイルの読み込みに失敗しました");
         return;
       }
 
       setCsvData(data);
       setEditedData(data.data);
+      // ヘッダーを状態として管理
+      const headerList = data.header.split(",").map((h: string) => h.trim());
+      setHeaders(headerList);
     } catch (err) {
-      setError('CSVファイルの読み込みに失敗しました');
-      console.error('Load CSV error:', err);
+      setError("CSVファイルの読み込みに失敗しました");
+      console.error("Load CSV error:", err);
     } finally {
       setLoading(false);
     }
@@ -69,19 +73,19 @@ export default function EditPage() {
     if (!csvData) return;
 
     setSaving(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
-      const response = await fetch('/api/admin/csv', {
-        method: 'POST',
+      const response = await fetch("/api/admin/csv", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           file: selectedFile,
           description: csvData.description,
-          header: csvData.header,
+          header: headers.join(","),
           data: editedData,
         }),
       });
@@ -89,16 +93,16 @@ export default function EditPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'CSVファイルの保存に失敗しました');
+        setError(data.error || "CSVファイルの保存に失敗しました");
         return;
       }
 
-      setSuccess('CSVファイルを保存しました');
+      setSuccess("CSVファイルを保存しました");
       // データを再読み込み
       await loadCSV();
     } catch (err) {
-      setError('CSVファイルの保存に失敗しました');
-      console.error('Save CSV error:', err);
+      setError("CSVファイルの保存に失敗しました");
+      console.error("Save CSV error:", err);
     } finally {
       setSaving(false);
     }
@@ -106,47 +110,55 @@ export default function EditPage() {
 
   const handleBuild = async () => {
     setBuilding(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
-      const response = await fetch('/api/admin/build', {
-        method: 'POST',
+      const response = await fetch("/api/admin/build", {
+        method: "POST",
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'ビルドに失敗しました');
+        setError(data.error || "ビルドに失敗しました");
         if (data.details) {
           setError(`${data.error}: ${data.details}`);
         }
         return;
       }
 
-      setSuccess('ビルドが完了しました');
+      setSuccess("ビルドが完了しました");
     } catch (err) {
-      setError('ビルドに失敗しました');
-      console.error('Build error:', err);
+      setError("ビルドに失敗しました");
+      console.error("Build error:", err);
     } finally {
       setBuilding(false);
     }
   };
 
   const handleLogout = async () => {
-    await fetch('/api/admin/logout', { method: 'POST' });
-    router.push('/admin/login');
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
   };
 
-  const handleAddRow = () => {
+  const handleAddRow = (insertAfterIndex?: number) => {
     if (!csvData) return;
 
-    const headers = csvData.header.split(',');
     const newRow: any = {};
     headers.forEach((header) => {
-      newRow[header.trim()] = '';
+      newRow[header] = "";
     });
-    setEditedData([...editedData, newRow]);
+
+    if (insertAfterIndex !== undefined) {
+      // 指定された行の後に挿入
+      const newData = [...editedData];
+      newData.splice(insertAfterIndex + 1, 0, newRow);
+      setEditedData(newData);
+    } else {
+      // 先頭に追加
+      setEditedData([newRow, ...editedData]);
+    }
   };
 
   const handleDeleteRow = (index: number) => {
@@ -174,8 +186,6 @@ export default function EditPage() {
       </div>
     );
   }
-
-  const headers = csvData.header.split(',').map((h) => h.trim());
 
   return (
     <div className={styles.container}>
@@ -214,14 +224,22 @@ export default function EditPage() {
             className={`${styles.button} ${styles.saveButton}`}
             disabled={saving}
           >
-            {saving ? '保存中...' : '保存'}
+            {saving ? "保存中..." : "保存"}
           </button>
           <button
             onClick={handleBuild}
             className={`${styles.button} ${styles.buildButton}`}
             disabled={building}
           >
-            {building ? 'ビルド中...' : 'ビルド実行'}
+            {building ? "ビルド中..." : "ビルド実行"}
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.footer}>
+        <div className={styles.footerActions}>
+          <button onClick={() => handleAddRow()} className={styles.addButton}>
+            先頭に行を追加
           </button>
         </div>
       </div>
@@ -248,7 +266,7 @@ export default function EditPage() {
                   <td key={header} className={styles.td}>
                     <input
                       type="text"
-                      value={row[header] || ''}
+                      value={row[header] || ""}
                       onChange={(e) =>
                         handleCellChange(rowIndex, header, e.target.value)
                       }
@@ -257,25 +275,27 @@ export default function EditPage() {
                   </td>
                 ))}
                 <td className={styles.td}>
-                  <button
-                    onClick={() => handleDeleteRow(rowIndex)}
-                    className={styles.deleteButton}
-                  >
-                    削除
-                  </button>
+                  <div className={styles.rowActions}>
+                    <button
+                      onClick={() => handleAddRow(rowIndex)}
+                      className={styles.insertButton}
+                      title="この行の下に行を追加"
+                    >
+                      +行
+                    </button>
+                    <button
+                      onClick={() => handleDeleteRow(rowIndex)}
+                      className={styles.deleteButton}
+                    >
+                      削除
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      <div className={styles.footer}>
-        <button onClick={handleAddRow} className={styles.addButton}>
-          行を追加
-        </button>
-      </div>
     </div>
   );
 }
-
