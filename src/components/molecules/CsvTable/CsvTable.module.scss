@@ -1,0 +1,53 @@
+.container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
+  background-color: #ffffff;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.headerCell {
+  padding: 0.75rem 1rem;
+  background-color: #f3f4f6;
+  font-weight: 600;
+  color: #1f2937;
+  border-bottom: 2px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.row {
+  border-bottom: 1px solid #e5e7eb;
+
+  &:hover {
+    background-color: #f9fafb;
+  }
+}
+
+.cell {
+  padding: 0.5rem 0.75rem;
+  min-width: 150px;
+  vertical-align: top;
+}
+
+.input {
+  width: 100%;
+}
+
+.actionsCell {
+  width: 160px;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.smallButton {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+}

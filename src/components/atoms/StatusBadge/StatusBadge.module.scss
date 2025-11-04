@@ -1,0 +1,19 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.allowed {
+  color: #16a34a;
+}
+
+.denied {
+  color: #dc2626;
+}
+
+.icon {
+  font-size: 1.1rem;
+}

@@ -1,0 +1,33 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.statusList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background-color: #f9fafb;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.statusItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.label {
+  min-width: 7.5rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.loading {
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.95rem;
+}

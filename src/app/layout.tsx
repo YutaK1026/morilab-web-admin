@@ -1,9 +1,9 @@
-import type { Metadata } from 'next';
-import './globals.css';
+import type { Metadata } from "next";
+import "./globals.scss";
 
 export const metadata: Metadata = {
-  title: 'Morilab Admin',
-  description: 'Morilab管理画面',
+  title: "Morilab Admin",
+  description: "Morilab管理画面",
 };
 
 export default function RootLayout({
@@ -17,4 +17,3 @@ export default function RootLayout({
     </html>
   );
 }
-

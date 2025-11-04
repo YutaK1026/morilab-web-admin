@@ -1,0 +1,38 @@
+.page {
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  gap: 1rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.actionsRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.tableSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}

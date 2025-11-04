@@ -1,0 +1,24 @@
+.message {
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.error {
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #991b1b;
+}
+
+.success {
+  background-color: #d1fae5;
+  border: 1px solid #6ee7b7;
+  color: #065f46;
+}
+
+.warning {
+  background-color: #fef3c7;
+  border: 1px solid #fbbf24;
+  color: #92400e;
+}
