@@ -1,4 +1,4 @@
-import { Button, TextInput } from "@/components/atoms";
+import { Button, ExpandableTextInput } from "@/components/atoms";
 import styles from "./CsvTable.module.scss";
 
 type RowData = Record<string, string>;
@@ -36,7 +36,7 @@ export function CsvTable({
             <tr key={`row-${rowIndex}`} className={styles.row}>
               {headers.map((header) => (
                 <td key={`${rowIndex}-${header}`} className={styles.cell}>
-                  <TextInput
+                  <ExpandableTextInput
                     className={styles.input}
                     value={row[header] ?? ""}
                     onChange={(event) => onCellChange(rowIndex, header, event.target.value)}
@@ -68,4 +68,3 @@ export function CsvTable({
     </div>
   );
 }
-

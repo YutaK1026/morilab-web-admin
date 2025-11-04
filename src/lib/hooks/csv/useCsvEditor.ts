@@ -37,7 +37,9 @@ export type UseCsvEditorResult = {
   logout: () => Promise<void>;
 };
 
-export function useCsvEditor(options: UseCsvEditorOptions = {}): UseCsvEditorResult {
+export function useCsvEditor(
+  options: UseCsvEditorOptions = {}
+): UseCsvEditorResult {
   const { onUnauthenticated } = options;
   const onUnauthenticatedRef = useRef(onUnauthenticated);
   const [selectedFile, setSelectedFileState] = useState<CsvFile>("members");
@@ -65,46 +67,43 @@ export function useCsvEditor(options: UseCsvEditorOptions = {}): UseCsvEditorRes
     setSuccess(null);
   }, []);
 
-  const loadCsv = useCallback(
-    async (file: CsvFile) => {
-      setLoading(true);
-      setError(null);
-      setSuccess(null);
+  const loadCsv = useCallback(async (file: CsvFile) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
 
-      try {
-        const response = await fetch(`/api/admin/csv?file=${file}`);
-        const data: CsvResponse = await response.json();
+    try {
+      const response = await fetch(`/api/admin/csv?file=${file}`);
+      const data: CsvResponse = await response.json();
 
-        if (!response.ok) {
-          if (response.status === 401) {
-            onUnauthenticatedRef.current?.();
-            return;
-          }
-          setError(data?.error ?? "CSVファイルの読み込みに失敗しました");
+      if (!response.ok) {
+        if (response.status === 401) {
+          onUnauthenticatedRef.current?.();
           return;
         }
-
-        descriptionRef.current = data.description;
-        const headerList = data.header
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
-
-        setHeaders(headerList);
-        setRows(data.data);
-        originalRowsRef.current = JSON.parse(JSON.stringify(data.data));
-        setHasChanges(false);
-        setIsSaved(false);
-      } catch (err) {
-        console.error("Load CSV error:", err);
-        setError("CSVファイルの読み込みに失敗しました");
-      } finally {
-        setLoading(false);
-        setInitialLoading(false);
+        setError(data.data ? null : "CSVファイルの読み込みに失敗しました");
+        return;
       }
-    },
-    []
-  );
+
+      descriptionRef.current = data.description;
+      const headerList = data.header
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      setHeaders(headerList);
+      setRows(data.data);
+      originalRowsRef.current = JSON.parse(JSON.stringify(data.data));
+      setHasChanges(false);
+      setIsSaved(false);
+    } catch (err) {
+      console.error("Load CSV error:", err);
+      setError("CSVファイルの読み込みに失敗しました");
+    } finally {
+      setLoading(false);
+      setInitialLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     loadCsv(selectedFile);
@@ -114,14 +113,11 @@ export function useCsvEditor(options: UseCsvEditorOptions = {}): UseCsvEditorRes
     await loadCsv(selectedFile);
   }, [loadCsv, selectedFile]);
 
-  const setSelectedFile = useCallback(
-    (file: CsvFile) => {
-      setSelectedFileState(file);
-      setSuccess(null);
-      setError(null);
-    },
-    []
-  );
+  const setSelectedFile = useCallback((file: CsvFile) => {
+    setSelectedFileState(file);
+    setSuccess(null);
+    setError(null);
+  }, []);
 
   const addRowAtTop = useCallback(() => {
     setRows((prev) => {

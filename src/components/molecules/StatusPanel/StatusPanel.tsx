@@ -33,12 +33,11 @@ export function StatusPanel({ status, isLoading }: StatusPanelProps) {
     <div className={styles.panel}>
       <div className={styles.statusList}>
         <div className={styles.statusItem}>
-          <span className={styles.label}>IPアドレス</span>
-          <StatusBadge allowed={status.ipAllowed} value={status.ip} />
-        </div>
-        <div className={styles.statusItem}>
           <span className={styles.label}>IP許可状態</span>
-          <StatusBadge allowed={status.ipAllowed} value={status.ipAllowed ? "許可済み" : "拒否"} />
+          <StatusBadge
+            allowed={status.ipAllowed}
+            value={status.ipAllowed ? "許可済み" : "拒否"}
+          />
         </div>
       </div>
       {!status.ipAllowed && (
@@ -47,4 +46,3 @@ export function StatusPanel({ status, isLoading }: StatusPanelProps) {
     </div>
   );
 }
-

@@ -4,4 +4,4 @@ export * from "./Message";
 export * from "./Select";
 export * from "./StatusBadge";
 export * from "./TextInput";
-
+export * from "./ExpandableTextInput";
