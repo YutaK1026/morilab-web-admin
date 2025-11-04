@@ -7,7 +7,8 @@ type FetchResponse = {
   json: () => Promise<any>;
 };
 
-const getFetchMock = () => global.fetch as unknown as jest.Mock<FetchResponse>;
+const getFetchMock = () =>
+  global.fetch as unknown as jest.Mock<Promise<FetchResponse>>;
 
 const createRef = (
   handler?: () => void
@@ -37,7 +38,9 @@ describe("useAdminStatusFetcher", () => {
       }),
     });
 
-    const { result } = renderHook(() => useAdminStatusFetcher(onAuthenticatedRef));
+    const { result } = renderHook(() =>
+      useAdminStatusFetcher(onAuthenticatedRef)
+    );
 
     await waitFor(() => expect(result.current.statusLoading).toBe(false));
 
@@ -59,7 +62,9 @@ describe("useAdminStatusFetcher", () => {
       json: async () => ({ error: "bad" }),
     });
 
-    const { result } = renderHook(() => useAdminStatusFetcher(onAuthenticatedRef));
+    const { result } = renderHook(() =>
+      useAdminStatusFetcher(onAuthenticatedRef)
+    );
 
     await waitFor(() => expect(result.current.statusLoading).toBe(false));
 
@@ -74,7 +79,9 @@ describe("useAdminStatusFetcher", () => {
 
     getFetchMock().mockRejectedValue(new Error("network"));
 
-    const { result } = renderHook(() => useAdminStatusFetcher(onAuthenticatedRef));
+    const { result } = renderHook(() =>
+      useAdminStatusFetcher(onAuthenticatedRef)
+    );
 
     await waitFor(() => expect(result.current.statusLoading).toBe(false));
 
@@ -105,7 +112,9 @@ describe("useAdminStatusFetcher", () => {
       }),
     });
 
-    const { result } = renderHook(() => useAdminStatusFetcher(onAuthenticatedRef));
+    const { result } = renderHook(() =>
+      useAdminStatusFetcher(onAuthenticatedRef)
+    );
 
     await waitFor(() => expect(result.current.statusLoading).toBe(false));
     expect(result.current.status?.authenticated).toBe(false);

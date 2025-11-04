@@ -21,7 +21,7 @@ describe("useAdminLogin", () => {
   function setupHook() {
     const fetchStatus = jest.fn().mockResolvedValue(undefined);
     mockUseAdminStatusFetcher.mockReturnValue({
-      status: { authenticated: false },
+      status: { authenticated: false, ip: "", ipAllowed: false },
       statusLoading: false,
       fetchStatus,
     });
