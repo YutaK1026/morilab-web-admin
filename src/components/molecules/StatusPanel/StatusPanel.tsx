@@ -2,10 +2,12 @@ import { Message, StatusBadge } from "@/components/atoms";
 import type { AdminStatus } from "@/features/admin/auth";
 import styles from "./StatusPanel.module.scss";
 
-type StatusPanelProps = {
+export type StatusPanelProps = {
   status: AdminStatus | null;
   isLoading: boolean;
 };
+
+export type { AdminStatus } from "@/features/admin/auth";
 
 export function StatusPanel({ status, isLoading }: StatusPanelProps) {
   if (isLoading) {
